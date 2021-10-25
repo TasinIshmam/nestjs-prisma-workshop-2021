@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { ProductEntity } from './entities/product.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -13,10 +23,15 @@ export class ProductsController {
   }
 
   @Get()
+  @ApiOkResponse({ type: ProductEntity, isArray: true })
   findAll() {
     return this.productsService.findAll();
   }
 
+  @Get('drafts')
+  findDrafts() {
+    return this.productsService.findDrafts();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);
