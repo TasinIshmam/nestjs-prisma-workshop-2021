@@ -9,7 +9,7 @@ import {
 
 export class CreateProductDto {
   @IsNotEmpty()
-  @MinLength(3)
+  @MinLength(3) // these are validation pipes
   @ApiProperty()
   name: string;
 
