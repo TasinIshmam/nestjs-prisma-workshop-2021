@@ -1,18 +1,30 @@
+import { INestApplication } from '@nestjs/common';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from './prisma.service';
+import { AppModule } from '../app.module';
 
-describe('PrismaService', () => {
-  let service: PrismaService;
+describe('Description', () => {
+  let app: INestApplication;
+  let prismaService: PrismaService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
       providers: [PrismaService],
     }).compile();
 
-    service = module.get<PrismaService>(PrismaService);
+    app = moduleFixture.createNestApplication();
+    prismaService = moduleFixture.get(PrismaService);
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await prismaService.$disconnect();
+    await app.close();
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(prismaService).toBeDefined();
   });
 });

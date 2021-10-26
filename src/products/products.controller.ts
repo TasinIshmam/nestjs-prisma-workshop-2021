@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ProductEntity } from './entities/product.entity';
+import { ConnectionArgsDto } from '../page/connection-args.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -39,8 +41,8 @@ export class ProductsController {
   }
 
   @Get('page')
-  async findPage() {
-    return this.productsService.findPage();
+  async findPage(@Query() connectionArgs: ConnectionArgsDto) {
+    return this.productsService.findPage(connectionArgs);
   }
 
   @Get(':id')
