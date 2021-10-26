@@ -66,24 +66,9 @@ export class ProductsService {
       Pick<Prisma.ProductWhereUniqueInput, 'id'>
     >(
       // 👇 args contain take, skip and cursor
-
       (args) => {
-        /*
-        This whole modified args this is a hack because I can't encode and decode the cursor properly.
-        I tried doing it in the encodeCursor and decodeCursor option provided, but without much success.
-        Those have been commented out.
-         */
-        let modified_args = args;
-        if (args.cursor) {
-          modified_args = {
-            ...args,
-            cursor: {
-              id: +args.cursor.id,
-            },
-          };
-        }
         return this.prisma.product.findMany({
-          ...modified_args,
+          ...args,
           where: where,
         });
       },
@@ -91,23 +76,12 @@ export class ProductsService {
       connectionArgs,
       {
         getCursor: (record) => ({ id: record.id }),
-        encodeCursor: (cursor) => JSON.stringify(cursor),
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // decodeCursor: (cursor) => {
-        //   console.log(`CURSOR STRING: ${cursor}`);
-        //   console.log(typeof cursor);
-        //
-        //   return +cursor;
-        //
-        //   // const cursorObj = JSON.parse(
-        //   //   Buffer.from(cursor, 'base64').toString('ascii'),
-        //   // );
-        //   //
-        //   // cursorObj.id = Number(cursorObj.id);
-        //   // return cursorObj;
-        // },
+        encodeCursor: (cursor) => {
+          return String(cursor.id);
+        },
+        decodeCursor: (cursor) => {
+          return { id: Number(cursor) };
+        },
       },
     );
   }
