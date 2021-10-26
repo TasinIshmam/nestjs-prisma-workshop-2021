@@ -5,6 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Prisma, Product } from '@prisma/client';
 import { ConnectionArgsDto } from '../page/connection-args.dto';
+import { ProductEntity } from './entities/product.entity';
+import { Page } from '../page/page.dto';
 
 @Injectable()
 export class ProductsService {
@@ -61,7 +63,7 @@ export class ProductsService {
     const where: Prisma.ProductWhereInput = { published: true };
     // syntax for number id for findManyCursorConnect taken from: https://github.com/devoxa/prisma-relay-cursor-connection/blob/028aa081c1a59ff2b19dc81629ec293dd0ae98af/tests/index.spec.ts#L158
 
-    return findManyCursorConnection<
+    const page = await findManyCursorConnection<
       Product,
       Pick<Prisma.ProductWhereUniqueInput, 'id'>
     >(
@@ -82,8 +84,13 @@ export class ProductsService {
         decodeCursor: (cursor) => {
           return { id: Number(cursor) };
         },
+        recordToEdge: (record) => {
+          return { node: new ProductEntity(record) };
+        },
       },
     );
+
+    return new Page<ProductEntity>(page);
   }
 }
 
