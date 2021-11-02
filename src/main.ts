@@ -28,6 +28,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, { customSiteTitle: 'Prisma Day' });
 
-  await app.listen(3000);
+  const port = 3000;
+  await app.listen(port);
+  console.log(`API: http://localhost:${port}/api`);
 }
 bootstrap();
