@@ -11,6 +11,7 @@ export const jwtSecret = 'prismaDay2021';
   imports: [
     PassportModule,
     JwtModule.register({
+      // I'm guessing registering this module ensures jwt strategy gets invoked
       secret: jwtSecret,
       signOptions: { expiresIn: '3600s' },
     }),

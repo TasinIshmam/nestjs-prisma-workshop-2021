@@ -13,7 +13,6 @@ import * as bcrypt from 'bcryptjs';
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
-  // todo: this needs to be improved. Using something like bcrypt...
   async login(email: string, password: string): Promise<AuthEntity> {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
