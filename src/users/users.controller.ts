@@ -45,41 +45,58 @@ export class UsersController {
   }
 
   // Todo: implement after figuring out how to do authorization
-  /*  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get()
+  @ApiOkResponse({ type: UserEntity, isArray: true })
+  @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
+  @ApiBearerAuth() // this is just a swagger tag.
+  @Roles(AuthRole.Admin)
+  async findAll() {
+    const users = await this.usersService.findAll();
+    return users.map((user) => new UserEntity(user));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @ApiOkResponse({ type: UserEntity })
+  @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
+  @ApiBearerAuth() // this is just a swagger tag.
+  @Roles(AuthRole.Admin)
+  async findOne(@Param('id') id: string) {
+    return new UserEntity(await this.usersService.findOne(id));
   }
 
   @Patch(':id')
+  @ApiCreatedResponse({ type: UserEntity })
+  @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
+  @ApiBearerAuth() // this is just a swagger tag.
+  @Roles(AuthRole.Admin)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }*/
-
-  @Get('TestNormal')
+  @ApiOkResponse({ type: UserEntity })
   @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
-  @ApiBearerAuth() // this is just a swagger tag.
-  @ApiOkResponse({ type: UserEntity })
-  @Roles(AuthRole.User)
-  async testNormal(@Request() req) {
-    return new UserEntity(req.user);
+  @ApiBearerAuth()
+  @Roles(AuthRole.Admin)
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
   }
 
-  @Get('TestAdmin')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBearerAuth() // this is just a swagger tag.
-  @ApiOkResponse({ type: UserEntity })
-  @Roles(AuthRole.Admin)
-  async testAdmin(@Request() req) {
-    return new UserEntity(req.user);
-  }
+  // @Get('TestNormal')
+  // @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
+  // @ApiBearerAuth() // this is just a swagger tag.
+  // @Roles(AuthRole.User)
+  // @ApiOkResponse({ type: UserEntity })
+  // async testNormal(@Request() req) {
+  //   return new UserEntity(req.user);
+  // }
+  //
+  // @Get('TestAdmin')
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @ApiBearerAuth() // this is just a swagger tag.
+  // @ApiOkResponse({ type: UserEntity })
+  // @Roles(AuthRole.Admin)
+  // async testAdmin(@Request() req) {
+  //   return new UserEntity(req.user);
+  // }
 }
