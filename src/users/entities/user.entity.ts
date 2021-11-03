@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Role } from '../../auth/authorization/role.enum';
 
 export class UserEntity implements User {
   @ApiProperty()
@@ -14,6 +15,9 @@ export class UserEntity implements User {
 
   @ApiProperty({ required: false, nullable: true })
   name: string;
+
+  // @ApiProperty({ required: false, nullable: true })
+  // roles: Role[];
 
   @ApiProperty()
   email: string;
