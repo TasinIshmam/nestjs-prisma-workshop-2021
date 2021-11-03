@@ -34,20 +34,4 @@ export class AuthController {
 
     return this.authService.login(email, password);
   }
-
-  @Get('TestNormal')
-  @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
-  @ApiBearerAuth() // this is just a swagger tag.
-  @ApiOkResponse({ type: UserEntity })
-  @Roles(Role.User)
-  async getSelf(@Request() req) {
-    return new UserEntity(req.user);
-  }
-
-  @Get('TestAdmin')
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Admin)
-  async testAdmin() {
-    return 'bar';
-  }
 }
