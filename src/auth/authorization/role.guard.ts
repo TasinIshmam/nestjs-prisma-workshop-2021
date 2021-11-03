@@ -6,18 +6,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from './role.enum';
+import { AuthRole } from './role.enum';
 import { ROLES_KEY } from './roles.decorator';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): any {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const requiredRoles = this.reflector.getAllAndOverride<AuthRole>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
     if (!requiredRoles) {
       return true;
     }
@@ -25,6 +26,20 @@ export class RolesGuard implements CanActivate {
     // console.log(requiredRoles);
     const { user } = context.switchToHttp().getRequest();
     // console.log(user);
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    return this.matchRoles(requiredRoles, user.role);
+  }
+
+  private matchRoles(requiredRoles: AuthRole, userRole: Role) {
+    const requiredRole = requiredRoles;
+
+    if (userRole === 'ADMIN') {
+      return true;
+    }
+
+    if (userRole === 'USER' && requiredRole === 'USER') {
+      return true;
+    }
+
+    return false;
   }
 }

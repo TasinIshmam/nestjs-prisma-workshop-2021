@@ -23,7 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthEntity } from '../auth/entity/auth.entity';
 import { RolesGuard } from '../auth/authorization/role.guard';
 import { Roles } from '../auth/authorization/roles.decorator';
-import { Role } from '../auth/authorization/role.enum';
+import { AuthRole } from '../auth/authorization/role.enum';
 
 @Controller('users')
 @ApiTags('users')
@@ -69,7 +69,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
   @ApiBearerAuth() // this is just a swagger tag.
   @ApiOkResponse({ type: UserEntity })
-  @Roles(Role.User)
+  @Roles(AuthRole.User)
   async testNormal(@Request() req) {
     return new UserEntity(req.user);
   }
@@ -78,7 +78,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth() // this is just a swagger tag.
   @ApiOkResponse({ type: UserEntity })
-  @Roles(Role.Admin)
+  @Roles(AuthRole.Admin)
   async testAdmin(@Request() req) {
     return new UserEntity(req.user);
   }

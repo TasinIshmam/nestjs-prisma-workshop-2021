@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/role.guard';
-import { Role } from './authorization/role.enum';
+import { AuthRole } from './authorization/role.enum';
 
 export const jwtSecret = 'prismaDay2021';
 
