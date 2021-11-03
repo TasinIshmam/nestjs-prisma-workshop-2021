@@ -24,6 +24,7 @@
   "dependencies": {
     "@devoxa/prisma-relay-cursor-connection": "^2.0.3",
     "@nestjs/common": "^7.6.17",
+    "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^7.6.17",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.0.1",

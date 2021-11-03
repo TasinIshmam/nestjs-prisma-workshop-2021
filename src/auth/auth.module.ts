@@ -7,16 +7,21 @@ import { JwtStrategy } from './jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/role.guard';
 import { AuthRole } from './authorization/role.enum';
-
-export const jwtSecret = 'prismaDay2021';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { async } from 'rxjs';
 
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      // I'm guessing registering this module ensures jwt strategy gets invoked
-      secret: jwtSecret,
-      signOptions: { expiresIn: '3600s' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
