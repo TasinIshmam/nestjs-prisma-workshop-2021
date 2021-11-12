@@ -44,7 +44,6 @@ export class UsersController {
     return new UserEntity(req.user);
   }
 
-  // Todo: implement after figuring out how to do authorization
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
   @UseGuards(JwtAuthGuard, RolesGuard) // this is what does the verification and adds req.user
