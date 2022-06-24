@@ -31,4 +31,6 @@ export class CreateProductDto {
 
   @ApiProperty({ required: false })
   published?: boolean;
+
+  // todo: Add userId property and make appropriate changes to the controller/serivce as well.
 }

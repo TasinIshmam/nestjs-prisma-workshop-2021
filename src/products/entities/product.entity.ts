@@ -1,7 +1,8 @@
-import { Product } from '@prisma/client';
+import { Product, User } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 export class ProductEntity implements Product {
   @ApiProperty()
@@ -29,16 +30,17 @@ export class ProductEntity implements Product {
   @ApiProperty({ default: false })
   published: boolean;
 
-  constructor(partial: Partial<ProductEntity>) {
-    Object.assign(this, partial);
-    // short for 👇
-    // this.id = partial.id;
-    // this.createdAt = partial.createdAt;
-    // this.updatedAt = partial.updatedAt;
-    // this.name = partial.name;
-    // this.description = partial.description;
-    // this.price = partial.price;
-    // this.sku = partial.sku;
-    // this.published = partial.published;
+  constructor({ createdBy, ...data }: Partial<ProductEntity>) {
+    Object.assign(this, data);
+
+    if (createdBy) {
+      this.createdBy = new UserEntity(createdBy);
+    }
   }
+
+  @Exclude()
+  userId: string | null;
+
+  @ApiProperty({ required: false, type: UserEntity })
+  createdBy?: UserEntity;
 }

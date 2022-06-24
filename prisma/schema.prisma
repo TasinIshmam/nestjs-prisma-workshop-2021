@@ -8,25 +8,27 @@ generator client {
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   name        String
   description String?
   price       Decimal
-  sku         String  @unique
-  published   Boolean @default(false)
+  sku         String   @unique
+  published   Boolean  @default(false)
+  createdBy   User?    @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   name      String?
-  email     String   @unique
+  email     String    @unique
   password  String
   role      Role?     @default(USER)
+  Product   Product[]
 }
 
 enum Role {

@@ -7,6 +7,7 @@ import { Prisma, Product } from '@prisma/client';
 import { ConnectionArgsDto } from '../page/connection-args.dto';
 import { ProductEntity } from './entities/product.entity';
 import { Page } from '../page/page.dto';
+import { ProductWithCreatedBy } from './types/product.types';
 
 @Injectable()
 export class ProductsService {
@@ -26,15 +27,18 @@ export class ProductsService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<ProductWithCreatedBy> {
     return this.prisma.product.findUnique({
       where: {
         id: id,
       },
+      include: {
+        createdBy: true,
+      },
     });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
     return this.prisma.product.update({
       where: {
         id,
